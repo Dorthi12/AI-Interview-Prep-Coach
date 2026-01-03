@@ -3,11 +3,15 @@ from pydantic import BaseModel
 
 from app.services.question_engine import QuestionEngine
 from app.services.session_manager import SessionManager
+from app.services.answer_evaluation import AnswerEvaluator
+
 
 router = APIRouter(prefix="/interview", tags=["Interview"])
 
 question_engine = QuestionEngine()
 session_manager = SessionManager()
+answer_evaluator = AnswerEvaluator()
+
 
 
 # ---------- MODELS ----------
@@ -30,6 +34,18 @@ class NextQuestionResponse(BaseModel):
     session_id: str
     question_number: int
     question: str
+
+class SubmitAnswerResponse(BaseModel):
+    session_id: str
+    relevance_score: float
+    feedback: list[str]
+
+class SubmitAnswerRequest(BaseModel):
+    session_id: str
+
+    answer: str
+
+
 
 
 # ---------- ROUTES ----------
@@ -69,4 +85,32 @@ def next_question(request: NextQuestionRequest):
         "session_id": request.session_id,
         "question_number": session["current_index"] + 1,
         "question": question
+    }
+@router.post("/answer", response_model=SubmitAnswerResponse)
+def submit_answer(request: SubmitAnswerRequest):
+    session = session_manager.get_session(request.session_id)
+
+    if not session:
+        raise HTTPException(status_code=404, detail="Invalid session ID")
+
+    # SAFETY: ensure answers list exists
+    if "answers" not in session:
+        session["answers"] = []
+
+    # store answer
+    session["answers"].append(request.answer)
+
+    # ensure question exists
+    if not session.get("questions"):
+        raise HTTPException(status_code=400, detail="No question found for this session")
+
+    question = session["questions"][-1]
+
+    # evaluate answer
+    evaluation = answer_evaluator.evaluate(question, request.answer)
+
+    return {
+        "session_id": request.session_id,
+        "relevance_score": evaluation["relevance_score"],
+        "feedback": evaluation["feedback"]
     }
