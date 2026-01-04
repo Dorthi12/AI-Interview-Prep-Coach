@@ -38,6 +38,8 @@ class NextQuestionResponse(BaseModel):
 class SubmitAnswerResponse(BaseModel):
     session_id: str
     relevance_score: float
+    star_score : int
+    confidence_score : int
     feedback: list[str]
 
 class SubmitAnswerRequest(BaseModel):
@@ -112,5 +114,7 @@ def submit_answer(request: SubmitAnswerRequest):
     return {
         "session_id": request.session_id,
         "relevance_score": evaluation["relevance_score"],
+        "star_score": evaluation["star_score"],
+        "confidence_score": evaluation["confidence_score"],
         "feedback": evaluation["feedback"]
     }
