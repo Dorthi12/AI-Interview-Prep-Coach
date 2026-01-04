@@ -60,11 +60,17 @@ class AnswerEvaluator:
         if strong_count > 0:
             feedback.append("Good use of action-oriented language.")
 
-
+        readiness_score = (
+                (relevance_score * 10) * 0.4 +
+                (star_score / 4 * 100) * 0.3 +
+                (confidence_score * 10) * 0.3
+        )
+        readiness_score = round(readiness_score, 2)
         return {
             "relevance_score": round(relevance_score * 10, 2),
             "star_score": star_score,
             "confidence_score": confidence_score,
+            "readiness_score": readiness_score,
             "feedback": feedback
         }
 
