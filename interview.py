@@ -40,6 +40,7 @@ class SubmitAnswerResponse(BaseModel):
     relevance_score: float
     star_score : int
     confidence_score : int
+    readiness_score: float
     feedback: list[str]
 
 class SubmitAnswerRequest(BaseModel):
@@ -116,5 +117,6 @@ def submit_answer(request: SubmitAnswerRequest):
         "relevance_score": evaluation["relevance_score"],
         "star_score": evaluation["star_score"],
         "confidence_score": evaluation["confidence_score"],
+        "readiness_score": evaluation["readiness_score"],
         "feedback": evaluation["feedback"]
     }
