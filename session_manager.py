@@ -10,7 +10,8 @@ class SessionManager:
         self.sessions[session_id] = {
             "role": role,
             "questions": [],
-            "answers": [],        # 👈 THIS WAS MISSING
+            "answers": [],
+            "evaluations": [],
             "current_index": 0
         }
         return {
