@@ -1,0 +1,17 @@
+{
+  "hr": [
+    "Tell me about yourself.",
+    "What are your strengths and weaknesses?",
+    "Why do you want this role?"
+  ],
+  "technical": [
+    "Explain how a hash map works.",
+    "What is the difference between REST and SOAP?",
+    "Explain time complexity with an example."
+  ],
+  "behavioral": [
+    "Tell me about a challenge you faced and how you handled it.",
+    "Describe a time you worked in a team.",
+    "Tell me about a failure and what you learned."
+  ]
+}
